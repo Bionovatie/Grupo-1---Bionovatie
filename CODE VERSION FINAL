@@ -1,0 +1,806 @@
+#include <Keypad.h>
+#include <Keyboard.h>
+const byte numRows = 4;      // Número de filas del teclado
+const byte numCols = 4;      // Número de columnas del teclado
+//define the cymbols on the buttons of the keypads
+char keymap[numRows][numCols] = {
+  {'1','2','3','A'},
+  {'4','5','6','B'},
+  {'7','8','9','C'},
+  {'*','0','#','D'}
+};
+
+/*
+  {'ABC', 'GVY', 'XWK', 'IDL'},
+  {'0', '123', 'QFH', 'JZÑ'},
+  {'CTU', 'ENTER', 'SIM', 'SRN'},
+  {'MPB', 'EAO', 'BACKSPACE', 'SPACE'}
+  
+  */
+byte rowPins[numRows] = {A3, A2, A1, A0};     // Pines de las filas
+byte colPins[numCols] = {4, 5, 6, 7};         // Pines de las columnas
+//initialize an instance of class NewKeypad
+Keypad keypad = Keypad(makeKeymap(keymap), rowPins, colPins, numRows, numCols);
+
+char presionando;
+int veces_presionada = 0;
+int mayuscula_activada = 0;
+int contador = 0;
+unsigned long tiempo_anterior = 0;
+int periodo = 500;
+
+int botonLetras=1;
+int botonNum=0;
+int botonSim=0;
+
+void setup()
+{
+ Serial.begin(9600);
+    Keyboard.begin();
+}
+
+void loop(){
+    char teclapresionada= keypad.getKey();
+
+    if (millis() > tiempo_anterior + periodo){
+      tiempo_anterior = millis();
+
+      if (veces_presionada > 0){
+        contador++;
+
+        if (contador == 3){
+          veces_presionada = 0;
+        }
+      }
+    }
+  
+
+    switch(teclapresionada){
+      
+      case 'D':{
+        Keyboard.write (' ');
+        break;
+      }
+      case '#':{
+        Keyboard.press(KEY_BACKSPACE);
+        delay(50);
+        Keyboard.releaseAll();
+        break;
+      }
+      case '8':{
+        Keyboard.press(KEY_RETURN);
+        delay(50);
+        Keyboard.releaseAll();
+        break;
+      }
+
+      case '1':{                
+          botonLetras=1;
+          botonNum=0;
+          botonSim=0;
+        break;
+      }
+        case '5':{                 
+            botonNum=1;
+            botonLetras=0;
+            botonSim=0;
+          break;
+        }
+        case '9':{                 
+            botonSim=1 ;
+            botonLetras=0;
+            botonNum=0;
+          break;
+        }
+
+
+      case '2':{
+            if (presionando != '2' && veces_presionada>0){
+                veces_presionada=0;
+            }
+            veces_presionada++;
+            contador=0;
+            presionando = '2';
+
+               
+                if(botonNum==1){
+                  Keyboard.write('1');
+                }
+                if(botonLetras==1){
+                  
+                  if (veces_presionada > 3){
+                      veces_presionada = 0;
+                  }
+
+                  if (veces_presionada == 3){
+
+                    Keyboard.press(KEY_BACKSPACE);
+                    Keyboard.press(KEY_BACKSPACE);
+                    
+                    Keyboard.releaseAll();
+                   
+                      if (mayuscula_activada == 1){
+                        
+                          Keyboard.write('Y');
+                      }else{
+                     
+                        Keyboard.write('y');
+                      }
+                      
+                  }
+                  if (veces_presionada == 2 ){  //and millis()>100<
+                      
+                    Keyboard.press(KEY_BACKSPACE);
+                    Keyboard.releaseAll();
+                
+                      if (mayuscula_activada == 1){
+                          
+                          Keyboard.write('V');
+                      }else{
+                         
+                          Keyboard.write('v');
+                      }
+                      
+                  } 
+                  if (veces_presionada == 1){
+                    
+                      if (mayuscula_activada == 1){
+                          Keyboard.write('G');
+                      }else{
+                          Keyboard.write('g');
+                      }
+                    
+                  }
+
+           
+                  
+                }    
+                if(botonSim==1){
+                //Keyboard.write('');
+                }
+                
+                
+        break;   
+      }
+      case '3':{
+            if (presionando != '3' && veces_presionada>0){
+                veces_presionada=0;
+            }
+            veces_presionada++;
+            contador=0;
+            presionando = '3';
+
+               
+                if(botonNum==1){
+                  Keyboard.write('2');
+                }
+                if(botonLetras==1){
+                  
+                  if (veces_presionada > 3){
+                      veces_presionada = 0;
+                  }
+
+                  if (veces_presionada == 3){
+                    Keyboard.press(KEY_BACKSPACE);
+                    Keyboard.press(KEY_BACKSPACE);
+                    
+                    Keyboard.releaseAll();
+                      if (mayuscula_activada == 1){
+                        
+                          Keyboard.write('K');
+                      }else{
+                     
+                        Keyboard.write('k');
+                      }
+                      
+                  }
+                  if (veces_presionada == 2 ){  //and millis()>100<
+                      Keyboard.press(KEY_BACKSPACE);
+            
+                    
+                    Keyboard.releaseAll();
+                     
+                
+                      if (mayuscula_activada == 1){
+                          
+                          Keyboard.write('W');
+                      }else{
+                         
+                          Keyboard.write('w');
+                      }
+                      
+                  } 
+                  if (veces_presionada == 1){
+                    
+                      if (mayuscula_activada == 1){
+                          Keyboard.write('X');
+                      }else{
+                          Keyboard.write('x');
+                      }
+                    
+                  }
+              
+
+           
+                  
+                }    
+                if(botonSim==1){
+                //Keyboard.write('');
+                }
+                
+                
+        break;   
+      }
+
+      case 'A':{
+            if (presionando != '4' && veces_presionada>0){
+                veces_presionada=0;
+            }
+            veces_presionada++;
+            contador=0;
+            presionando = '4';
+
+               
+                if(botonNum==1){
+                  Keyboard.write('3');
+                }
+                if(botonLetras==1){
+                  
+                  if (veces_presionada > 3){
+                      veces_presionada = 0;
+                  }
+
+                  if (veces_presionada == 3){
+                   Keyboard.press(KEY_BACKSPACE);
+                   Keyboard.press(KEY_BACKSPACE);
+                    
+                    Keyboard.releaseAll();
+                      if (mayuscula_activada == 1){
+                        
+                          Keyboard.write('L');
+                      }else{
+                     
+                        Keyboard.write('l');
+                      }
+                      
+                  }
+                  if (veces_presionada == 2 ){  //and millis()>100<
+                    Keyboard.press(KEY_BACKSPACE);
+                 
+                    
+                    Keyboard.releaseAll();
+                     
+                
+                      if (mayuscula_activada == 1){
+                          
+                          Keyboard.write('D');
+                      }else{
+                         
+                          Keyboard.write('d');
+                      }
+                      
+                  } 
+                  if (veces_presionada == 1){
+                    
+                      if (mayuscula_activada == 1){
+                          Keyboard.write('I');
+                      }else{
+                          Keyboard.write('i');
+                      }
+                    
+                  }
+
+           
+                  
+                }    
+                if(botonSim==1){
+                //Keyboard.write('');
+                }
+                
+                
+        break;   
+      }
+
+      case '6':{
+            if (presionando != '6' && veces_presionada>0){
+                veces_presionada=0;
+            }
+            veces_presionada++;
+            contador=0;
+            presionando = '6';
+
+               
+                if(botonNum==1){
+                  Keyboard.write('4');
+                }
+                if(botonLetras==1){
+                  
+                  if (veces_presionada > 3){
+                      veces_presionada = 0;
+                  }
+
+                  if (veces_presionada == 3){
+                    Keyboard.press(KEY_BACKSPACE);
+                    Keyboard.press(KEY_BACKSPACE);
+                    
+                    Keyboard.releaseAll();
+                      if (mayuscula_activada == 1){
+                        
+                          Keyboard.write('H');
+                      }else{
+                     
+                        Keyboard.write('h');
+                      }
+                      
+                  }
+                  if (veces_presionada == 2 ){  //and millis()>100<
+                      
+                    Keyboard.press(KEY_BACKSPACE);
+                   
+                    
+                    Keyboard.releaseAll();
+                
+                      if (mayuscula_activada == 1){
+                          
+                          Keyboard.write('F');
+                      }else{
+                         
+                          Keyboard.write('f');
+                      }
+                      
+                  } 
+                  if (veces_presionada == 1){
+                    
+                      if (mayuscula_activada == 1){
+                          Keyboard.write('Q');
+                      }else{
+                          Keyboard.write('q');
+                      }
+                    
+                  }
+
+           
+                  
+                }    
+                if(botonSim==1){
+                //Keyboard.write('');
+                }
+                
+                
+        break;   
+      }
+
+      case 'B':{
+            if (presionando != 'B' && veces_presionada>0){
+                veces_presionada=0;
+            }
+            veces_presionada++;
+            contador=0;
+            presionando = 'B';
+
+               
+                if(botonNum==1){
+                  Keyboard.write('5');
+                }
+                if(botonLetras==1){
+                  
+                  if (veces_presionada > 3){
+                      veces_presionada = 0;
+                  }
+
+                  if (veces_presionada == 3){
+                    Keyboard.press(KEY_BACKSPACE);
+                    Keyboard.press(KEY_BACKSPACE);
+                    
+                    Keyboard.releaseAll();
+                      if (mayuscula_activada == 1){
+                        
+                          Keyboard.write('Ñ');
+                      }else{
+                     
+                        Keyboard.write('ñ');
+                      }
+                      
+                  }
+                  if (veces_presionada == 2 ){  //and millis()>100<
+                      
+                    Keyboard.press(KEY_BACKSPACE);
+                   
+                    
+                    Keyboard.releaseAll();
+                
+                      if (mayuscula_activada == 1){
+                          
+                          Keyboard.write('Z');
+                      }else{
+                         
+                          Keyboard.write('z');
+                      }
+                      
+                  } 
+                  if (veces_presionada == 1){
+                    
+                      if (mayuscula_activada == 1){
+                          Keyboard.write('J');
+                      }else{
+                          Keyboard.write('j');
+                      }
+                    
+                  }
+
+           
+                  
+                }    
+                if(botonSim==1){
+                Keyboard.press(KEY_UP_ARROW);
+                delay(50);
+                Keyboard.releaseAll();
+                break;
+                }
+                
+                
+        break;   
+      }
+      case '7':{
+            if (presionando != '7' && veces_presionada>0){
+                veces_presionada=0;
+            }
+            veces_presionada++;
+            contador=0;
+            presionando = '7';
+
+               
+                if(botonNum==1){
+                  Keyboard.write('6');
+                }
+                if(botonLetras==1){
+                  
+                  if (veces_presionada > 3){
+                      veces_presionada = 0;
+                  }
+
+                  if (veces_presionada == 3){
+                    Keyboard.press(KEY_BACKSPACE);
+                    Keyboard.press(KEY_BACKSPACE);
+                    
+                    Keyboard.releaseAll();
+                      if (mayuscula_activada == 1){
+                        
+                          Keyboard.write('U');
+                      }else{
+                     
+                        Keyboard.write('u');
+                      }
+                      
+                  }
+                  if (veces_presionada == 2 ){  //and millis()>100<
+                      
+                     Keyboard.press(KEY_BACKSPACE);
+               
+                    
+                    Keyboard.releaseAll();
+                
+                      if (mayuscula_activada == 1){
+                          
+                          Keyboard.write('T');
+                      }else{
+                         
+                          Keyboard.write('t');
+                      }
+                      
+                  } 
+                  if (veces_presionada == 1){
+                    
+                      if (mayuscula_activada == 1){
+                          Keyboard.write('C');
+                      }else{
+                          Keyboard.write('c');
+                      }
+                    
+                  }
+
+           
+                  
+                }    
+                if(botonSim==1){
+                //Keyboard.write('');
+                }
+                
+                
+        break;   
+      }
+      case 'C':{
+            if (presionando != 'C' && veces_presionada>0){
+                veces_presionada=0;
+            }
+            veces_presionada++;
+            contador=0;
+            presionando = 'C';
+
+               
+                if(botonNum==1){
+                  Keyboard.write('7');
+                }
+                if(botonLetras==1){
+                  
+                  if (veces_presionada > 3){
+                      veces_presionada = 0;
+                  }
+
+                  if (veces_presionada == 3){
+                    Keyboard.press(KEY_BACKSPACE);
+                    Keyboard.press(KEY_BACKSPACE);
+                    
+                    Keyboard.releaseAll();
+                      if (mayuscula_activada == 1){
+                        
+                          Keyboard.write('N');
+                      }else{
+                     
+                        Keyboard.write('n');
+                      }
+                      
+                  }
+                  if (veces_presionada == 2 ){  //and millis()>100<
+                    Keyboard.press(KEY_BACKSPACE);
+                    
+                    Keyboard.releaseAll();
+                      if (mayuscula_activada == 1){
+                          
+                          Keyboard.write('R');
+                      }else{
+                         
+                          Keyboard.write('r');
+                      }
+                      
+                  } 
+                  if (veces_presionada == 1){
+                    
+                      if (mayuscula_activada == 1){
+                          Keyboard.write('S');
+                      }else{
+                          Keyboard.write('s');
+                      }
+                    
+                  }
+
+           
+                  
+                }    
+                if(botonSim==1){
+                Keyboard.press(KEY_LEFT_ARROW);
+                delay(50);
+                Keyboard.releaseAll();
+                break;
+                }
+                
+                
+        break;   
+      }
+
+      case '*':{
+            if (presionando != '*' && veces_presionada>0){
+                veces_presionada=0;
+            }
+            veces_presionada++;
+            contador=0;
+            presionando = '*';
+
+               
+                if(botonNum==1){
+                  Keyboard.write('8');
+                }
+                if(botonLetras==1){
+                  
+                  if (veces_presionada > 3){
+                      veces_presionada = 0;
+                  }
+
+                  if (veces_presionada == 3){
+                    Keyboard.press(KEY_BACKSPACE);
+                    Keyboard.press(KEY_BACKSPACE);
+                    
+                    Keyboard.releaseAll();
+                      if (mayuscula_activada == 1){
+                        
+                          Keyboard.write('B');
+                      }else{
+                     
+                        Keyboard.write('b');
+                      }
+                      
+                  }
+                  if (veces_presionada == 2 ){  //and millis()>100<
+                    Keyboard.press(KEY_BACKSPACE);
+                  
+                    Keyboard.releaseAll();
+                     
+                
+                      if (mayuscula_activada == 1){
+                          
+                          Keyboard.write('P');
+                      }else{
+                         
+                          Keyboard.write('p');
+                      }
+                      
+                  } 
+                  if (veces_presionada == 1){
+                    
+                      if (mayuscula_activada == 1){
+                          Keyboard.write('M');
+                      }else{
+                          Keyboard.write('m');
+                      }
+                    
+                  }
+
+           
+                  
+                }    
+                if(botonSim==1){
+                Keyboard.press(KEY_DOWN_ARROW);
+                delay(50);
+                Keyboard.releaseAll();
+                break;
+                }
+                
+                
+        break;   
+      }
+      case '0':{
+            if (presionando != '0' && veces_presionada>0){
+                veces_presionada=0;
+            }
+            veces_presionada++;
+            contador=0;
+            presionando = '0';
+
+               
+                if(botonNum==1){
+                  Keyboard.write('9');
+                }
+                if(botonLetras==1){
+                  
+                  if (veces_presionada > 3){
+                      veces_presionada = 0;
+                  }
+
+                  if (veces_presionada == 3){
+                    Keyboard.press(KEY_BACKSPACE);
+                    Keyboard.press(KEY_BACKSPACE);
+                    
+                    Keyboard.releaseAll();
+                      if (mayuscula_activada == 1){
+                        
+                          Keyboard.write('O');
+                      }else{
+                     
+                        Keyboard.write('o');
+                      }
+                      
+                  }
+                  if (veces_presionada == 2 ){  //and millis()>100<
+                      Keyboard.press(KEY_BACKSPACE);
+                 
+                    
+                    Keyboard.releaseAll();
+                     
+                
+                      if (mayuscula_activada == 1){
+                          
+                          Keyboard.write('A');
+                      }else{
+                         
+                          Keyboard.write('a');
+                      }
+                      
+                  } 
+                  if (veces_presionada == 1){
+                    
+                      if (mayuscula_activada == 1){
+                          Keyboard.write('E');
+                      }else{
+                          Keyboard.write('e');
+                      }
+                    
+                  }
+
+           
+                  
+                }    
+                if(botonSim==1){
+                Keyboard.press(KEY_RIGHT_ARROW);
+                delay(50);
+                Keyboard.releaseAll();
+                break;
+                }
+                
+                
+        break;   
+      }
+      case '4':{
+            if (presionando != '4' && veces_presionada>0){
+                veces_presionada=0;
+            }
+            veces_presionada++;
+            contador=0;
+            presionando = '4';
+
+                if(botonLetras==1){
+                   mayuscula_activada++;
+                    if (mayuscula_activada > 1){
+                    mayuscula_activada = 0;
+                }
+                }
+            
+
+               
+                if(botonNum==1){
+                  Keyboard.write('0');
+                }
+                
+                if(botonSim==1){
+                  
+                  if (veces_presionada > 3){
+                      veces_presionada = 0;
+                  }
+
+                  if (veces_presionada == 4){
+                  
+                     Keyboard.press(KEY_BACKSPACE);
+                    Keyboard.press(KEY_BACKSPACE);
+                    Keyboard.press(KEY_BACKSPACE);
+                    
+                    Keyboard.releaseAll();
+                          Keyboard.write('/');
+                     
+                      
+                  }
+                  if (veces_presionada == 3){
+                    Keyboard.press(KEY_BACKSPACE);
+                    Keyboard.press(KEY_BACKSPACE);
+                    
+                    Keyboard.releaseAll();
+                        
+                          Keyboard.write('@');
+                     
+                      
+                  }
+                  if (veces_presionada == 2){
+                        Keyboard.press(KEY_BACKSPACE);
+                    
+                    
+                           Keyboard.releaseAll();
+                        
+                          Keyboard.write(',');
+                     
+                      
+                  }
+                  if (veces_presionada == 1){
+                  
+                        
+                          Keyboard.write('.');
+                     
+                      
+                  }
+
+           
+                
+                
+                
+        break;   
+      }
+
+
+      
+
+
+
+
+
+    }
+}
+}
+message.txt
+24 KB
